@@ -15,18 +15,8 @@ pipeline {
         /* checkout repo */
         stage('Checkout SCM') {
             checkout scm
-            /* steps {
-                checkout([
-                 $class: 'GitSCM',
-                 //branches: [[name: '*/master']],
-                 //branches: [[name: 'refs/tags/${TAG}']],
-                 userRemoteConfigs: [[
-                    url: 'https://github.com/shclub/edu1.git',
-                    credentialsId: 'github_ci', 
-                 ]]
-                ])
-            }*/
         }
+        
         stage("Building docker image"){
             steps{
                 script{
