@@ -14,7 +14,11 @@ pipeline {
     stages {
         /* checkout repo */
         stage('Checkout SCM') {
-            checkout scm
+            steps{
+                script{
+                    checkout scm
+                 }
+            }   
         }
         
         stage("Building docker image"){
