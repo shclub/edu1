@@ -14,7 +14,8 @@ pipeline {
     stages {
         /* checkout repo */
         stage('Checkout SCM') {
-            steps {
+            checkout scm
+            /* steps {
                 checkout([
                  $class: 'GitSCM',
                  //branches: [[name: '*/master']],
@@ -24,7 +25,7 @@ pipeline {
                     credentialsId: 'github_ci', 
                  ]]
                 ])
-            }
+            }*/
         }
         stage("Building docker image"){
             steps{
