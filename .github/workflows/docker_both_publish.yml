@@ -3,7 +3,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Publish Docker image
+name: Publish Docker Both image
 
 on:
   release:
@@ -37,8 +37,8 @@ jobs:
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-          images: |
-            my-docker-hub-namespace/my-docker-hub-repository
+          images: 
+            shclub/edu1
             ghcr.io/${{ github.repository }}
       
       - name: Build and push Docker images
