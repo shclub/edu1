@@ -2,17 +2,15 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Publish Docker image
+name: Publish Docker Hub image
 
-on:
-#  release:
-#    types: [published]
-  push:
-    branches: [ master ]
-    # Publish semver tags as releases.
-#    tags: [ 'v*.*.*' ]
-  pull_request:
-    branches: [ master ]
+on:      
+  workflow_dispatch:
+    inputs:
+      name:
+        description: "TAG"
+        required: true
+        default: "master"
     
 jobs:
   push_to_registry:
