@@ -3,7 +3,7 @@ properties([pipelineTriggers([githubPush()])])
 pipeline {
     environment {
         // name of the image without tag
-        dockerRepo = "shclub/edu1"
+        dockerRepo = "jekilim/edu1"
         dockerCredentials = 'docker_ci'
         dockerImageVersioned = ""
         dockerImageLatest = ""
