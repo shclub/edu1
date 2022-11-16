@@ -45,12 +45,12 @@ jobs:
           images: 
             shclub/edu1
             ghcr.io/${{ github.repository }}
+          tags: ${{ github.event.inputs.name }}
       
       - name: Build and push Docker images
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: .
           push: true
-          tags: shclub/edu1
-      #${{ steps.meta.outputs.tags }}
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
