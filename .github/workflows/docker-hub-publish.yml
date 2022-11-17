@@ -30,7 +30,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-          images: shclub/edu1
+          images: ${{ github.repository }}
           tags: ${{ github.event.inputs.name }}
       
       - name: Build and push Docker image
@@ -38,5 +38,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ github.event.inputs.name }}
           labels: ${{ steps.meta.outputs.labels }}
