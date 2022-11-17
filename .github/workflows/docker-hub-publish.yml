@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       name:
-        description: "TAG"
+        description: "Docker TAG"
         required: true
         default: "master"
     
