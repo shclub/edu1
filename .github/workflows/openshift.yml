@@ -1,39 +1,13 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
-# 💁 The OpenShift Starter workflow will:
-# - Checkout your repository
-# - Perform a container image build
-# - Push the built image to the GitHub Container Registry (GHCR)
-# - Log in to your OpenShift cluster
-# - Create an OpenShift app from the image and expose it to the internet
-
-# ℹ️ Configure your repository and the workflow with the following steps:
-# 1. Have access to an OpenShift cluster. Refer to https://www.openshift.com/try
-# 2. Create the OPENSHIFT_SERVER and OPENSHIFT_TOKEN repository secrets. Refer to:
-#   - https://github.com/redhat-actions/oc-login#readme
-#   - https://docs.github.com/en/actions/reference/encrypted-secrets
-#   - https://cli.github.com/manual/gh_secret_set
-# 3. (Optional) Edit the top-level 'env' section as marked with '🖊️' if the defaults are not suitable for your project.
-# 4. (Optional) Edit the build-image step to build your project.
-#    The default build type is by using a Dockerfile at the root of the repository,
-#    but can be replaced with a different file, a source-to-image build, or a step-by-step buildah build.
-# 5. Commit and push the workflow file to your default branch to trigger a workflow run.
-
-# 👋 Visit our GitHub organization at https://github.com/redhat-actions/ to see our actions and provide feedback.
-
 name: OpenShift
 
 env:
   # 🖊️ EDIT your repository secrets to log into your OpenShift cluster and set up the context.
   # See https://github.com/redhat-actions/oc-login#readme for how to retrieve these values.
   # To get a permanent token, refer to https://github.com/redhat-actions/oc-login/wiki/Using-a-Service-Account-for-GitHub-Actions
-  OPENSHIFT_SERVER: "https://api.211-34-231-81.nip.io:6443" # ${{ secrets.OPENSHIFT_SERVER }}
+  OPENSHIFT_SERVER: ${{ secrets.OPENSHIFT_SERVER }}
   #OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
   # 🖊️ EDIT to set the kube context's namespace after login. Leave blank to use your user's default namespace.
-  OPENSHIFT_NAMESPACE: "edu1"
+  OPENSHIFT_NAMESPACE: ${{ secrets.OPENSHIFT_NAMESPACE }}
 
   # 🖊️ EDIT to set a name for your OpenShift app, or a default one will be generated below.
   APP_NAME: ""
@@ -74,20 +48,6 @@ jobs:
       SELECTOR: ${{ steps.deploy-and-expose.outputs.selector }}
 
     steps:
-
-    - name: Check out repository
-      uses: actions/checkout@v3
-
-    - name: Determine app name
-      if: env.APP_NAME == ''
-      run: |
-        echo "APP_NAME=$(basename $PWD)" | tee -a $GITHUB_ENV
-
-    - name: Determine image tags
-      if: env.IMAGE_TAGS == ''
-      run: |
-        echo "IMAGE_TAGS=latest ${GITHUB_SHA::12}" | tee -a $GITHUB_ENV
-
     - name: Build from Dockerfile
       id: build-image
       uses: redhat-actions/buildah-build@v2
@@ -127,7 +87,7 @@ jobs:
         #openshift_token: ${{ env.OPENSHIFT_TOKEN }}
         insecure_skip_tls_verify: true
         namespace: ${{ env.OPENSHIFT_NAMESPACE }}
-        openshift_username: "edu1-admin" #${{ env.OPENSHIFT_USER }}
+        openshift_username: ${{ env.OPENSHIFT_USER }}
         openshift_password: ${{ secrets.OPENSHIFT_PASSWORD }}
 
     # This step should create a deployment, service, and route to run your app and expose it to the internet.
