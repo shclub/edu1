@@ -33,7 +33,7 @@ on:
       name:
         description: "Route Name"
         required: true
-        default: "master"
+        default: ${{ github.repository }}
 
 jobs:
 
