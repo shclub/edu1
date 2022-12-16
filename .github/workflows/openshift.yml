@@ -48,6 +48,20 @@ jobs:
       SELECTOR: ${{ steps.deploy-and-expose.outputs.selector }}
 
     steps:
+    
+    - name: Check out repository
+      uses: actions/checkout@v3
+
+    - name: Determine app name
+      if: env.APP_NAME == ''
+      run: |
+        echo "APP_NAME=$(basename $PWD)" | tee -a $GITHUB_ENV
+
+    - name: Determine image tags
+      if: env.IMAGE_TAGS == ''
+      run: |
+        echo "IMAGE_TAGS=latest ${GITHUB_SHA::12}" | tee -a $GITHUB_ENV
+        
     - name: Build from Dockerfile
       id: build-image
       uses: redhat-actions/buildah-build@v2
@@ -103,7 +117,7 @@ jobs:
 
     - name: Print application URL
       env:
-        ROUTE: ${{ steps.deploy-and-expose.outputs.route }}
+        ROUTE: ${{ github.event.inputs.name }} # ${{ steps.deploy-and-expose.outputs.route }}
         SELECTOR: ${{ steps.deploy-and-expose.outputs.selector }}
       run: |
         [[ -n ${{ env.ROUTE }} ]] || (echo "Determining application route failed in previous step"; exit 1)
@@ -113,3 +127,10 @@ jobs:
         echo "==================================================================================="
         echo
         echo "Your app can be taken down with: \"oc delete all --selector='${{ env.SELECTOR }}'\""
+        
+    - name: kubectl
+      run: |
+       echo "kubectlget po"
+       kubectl get po 
+       echo "kubectl get svc"
+       kubectl get svc 
