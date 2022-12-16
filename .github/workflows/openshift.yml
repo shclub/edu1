@@ -74,7 +74,7 @@ jobs:
         # Or, perform a source-to-image build using https://github.com/redhat-actions/s2i-build
         # Otherwise, point this to your Dockerfile/Containerfile relative to the repository root.
         dockerfiles: |
-          ./Dockerfile
+          ./Dockerfile_openshift
 
     # https://github.com/redhat-actions/push-to-registry#readme
     - name: Push to registry
@@ -105,7 +105,7 @@ jobs:
         openshift_username: ${{ secrets.OPENSHIFT_USER }}
         openshift_password: ${{ secrets.OPENSHIFT_PASSWORD }}
 
-    - name: kubectl
+    - name: kubectl Query Before Deploy
       run: |
        echo "kubectlget po"
        kubectl get po 
@@ -123,8 +123,6 @@ jobs:
         namespace: ${{ env.OPENSHIFT_NAMESPACE }}
         port: ${{ env.APP_PORT }}
 
-# ${{ github.event.inputs.name }} 
-
     - name: Print application URL
       env:
         ROUTE: ${{ steps.deploy-and-expose.outputs.route }}
@@ -138,8 +136,9 @@ jobs:
         echo
         echo "Your app can be taken down with: \"oc delete all --selector='${{ env.SELECTOR }}'\""
         
-    - name: kubectl
+    - name: kubectl Query After Deploy 
       run: |
+       sleep 5s
        echo "kubectlget po"
        kubectl get po 
        echo "kubectl get svc"
