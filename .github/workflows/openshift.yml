@@ -8,8 +8,6 @@ env:
   #OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
   # 🖊️ EDIT to set the kube context's namespace after login. Leave blank to use your user's default namespace.
   OPENSHIFT_NAMESPACE: ${{ secrets.OPENSHIFT_NAMESPACE }}
-  OPENSHIFT_USER: ${{ secrets.OPENSHIFT_USER }}
-  OPENSHIFT_PASSWORD: ${{ secrets.OPENSHIFT_PASSWORD }}
 
 
   # 🖊️ EDIT to set a name for your OpenShift app, or a default one will be generated below.
@@ -104,7 +102,7 @@ jobs:
         #openshift_token: ${{ env.OPENSHIFT_TOKEN }}
         insecure_skip_tls_verify: true
         namespace: ${{ env.OPENSHIFT_NAMESPACE }}
-        openshift_username: ${{ env.OPENSHIFT_USER }}
+        openshift_username: ${{ secrets.OPENSHIFT_USER }}
         openshift_password: ${{ secrets.OPENSHIFT_PASSWORD }}
 
     # This step should create a deployment, service, and route to run your app and expose it to the internet.
