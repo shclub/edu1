@@ -16,7 +16,7 @@ env:
   # 🖊️ EDIT with the port your application should be accessible on.
   # If the container image exposes *exactly one* port, this can be left blank.
   # Refer to the 'port' input of https://github.com/redhat-actions/oc-new-app
-  APP_PORT: "5000"
+  APP_PORT: ""
 
   # 🖊️ EDIT to change the image registry settings.
   # Registries such as GHCR, Quay.io, and Docker Hub are supported.
@@ -45,7 +45,7 @@ jobs:
     environment: production
 
     outputs:
-      ROUTE: ${{ github.event.inputs.name }} # ${{ steps.deploy-and-expose.outputs.route }}
+      ROUTE:  ${{ steps.deploy-and-expose.outputs.route }} # ${{ github.event.inputs.name }} 
       SELECTOR: ${{ steps.deploy-and-expose.outputs.selector }}
 
     steps:
@@ -105,6 +105,13 @@ jobs:
         openshift_username: ${{ secrets.OPENSHIFT_USER }}
         openshift_password: ${{ secrets.OPENSHIFT_PASSWORD }}
 
+    - name: kubectl
+      run: |
+       echo "kubectlget po"
+       kubectl get po 
+       echo "kubectl get svc"
+       kubectl get svc 
+       
     # This step should create a deployment, service, and route to run your app and expose it to the internet.
     # https://github.com/redhat-actions/oc-new-app#readme
     - name: Create and expose app
@@ -116,9 +123,11 @@ jobs:
         namespace: ${{ env.OPENSHIFT_NAMESPACE }}
         port: ${{ env.APP_PORT }}
 
+# ${{ github.event.inputs.name }} 
+
     - name: Print application URL
       env:
-        ROUTE: ${{ github.event.inputs.name }} # ${{ steps.deploy-and-expose.outputs.route }}
+        ROUTE: ${{ steps.deploy-and-expose.outputs.route }}
         SELECTOR: ${{ steps.deploy-and-expose.outputs.selector }}
       run: |
         [[ -n ${{ env.ROUTE }} ]] || (echo "Determining application route failed in previous step"; exit 1)
