@@ -3,7 +3,7 @@ properties([pipelineTriggers([githubPush()])])
 pipeline {
     environment {
         // Global 변수 선언
-        dockerRepo = "211.252.85.148:40010/edu1"
+        dockerRepo = "edu1"
         dockerCredentials = 'edu_private_docker_ci'
         dockerImageVersioned = ""
         dockerImageLatest = ""
@@ -33,7 +33,7 @@ pipeline {
             steps{
                 script{
                     // if you want to use custom registry, use the first argument, which is blank in this case
-                    docker.withRegistry( 'http://211.252.85.148:40010', dockerCredentials){
+                    docker.withRegistry( '211.252.85.148:40010', dockerCredentials){
                         dockerImageVersioned.push()
                         dockerImageLatest.push()
                     }
