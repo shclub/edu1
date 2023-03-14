@@ -3,8 +3,10 @@ properties([pipelineTriggers([githubPush()])])
 pipeline {
     environment {
         // Global 변수 선언
-        
+        // Harbor 사용시 : 앞에 project 이름이 붙는다. 예) edu
         dockerRepo = "edu/edu1"
+        // nexus
+        //dockerRepo = "edu1"
         dockerCredentials = 'edu_private_docker_ci'
         dockerImageVersioned = ""
         dockerImageLatest = ""
