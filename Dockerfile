@@ -15,4 +15,3 @@ EXPOSE 40003
 
 # execute the Flask app
 CMD ["python", "app.py"]
-#CMD [python app.py] 
