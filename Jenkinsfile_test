@@ -13,7 +13,7 @@ podTemplate(label: label, serviceAccount: 'jenkins-admin', namespace: 'edu30',
         ,containerTemplate(name: 'jnlp', image: 'jenkins/jnlp-slave:latest-jdk11', args: '${computer.jnlpmac} ${computer.name}')
     ],
     volumes: [
-        nfsVolume( mountPath: '/root/.m2', serverAddress: '10.217.139.23', serverPath: '/AIRFLOW/jenkins-m2', readOnly: false ),
+        nfsVolume( mountPath: '/slave', serverAddress: '172.25.1.162', serverPath: '/share_8c0fade2_649f_4ca5_aeaa_8fd57904f8d5/jenkins/edu_slave', readOnly: false ),
     ]){
     //node("podman-agent") {
     node(label) {
