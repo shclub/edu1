@@ -10,9 +10,9 @@ podTemplate(label: label, serviceAccount: 'jenkins-admin', namespace: 'edu30',
         ,containerTemplate(name: 'jnlp', image: 'jenkins/jnlp-slave:latest-jdk11', args: '${computer.jnlpmac} ${computer.name}')
     ],
     volumes: [
-        nfsVolume( mountPath: '/var/jenkins_home', serverAddress: '172.25.1.162', serverPath: '/share_8c0fade2_649f_4ca5_aeaa_8fd57904f8d5/jenkins/edu_slave', readOnly: false ),
-    ]){
-    
+        hostPathVolume(hostPath: '/etc/containers', mountPath: '/var/lib/containers'),
+        nfsVolume(mountPath: '/var/jenkins_home', serverAddress: '172.25.1.162', serverPath: '/share_8c0fade2_649f_4ca5_aeaa_8fd57904f8d5/jenkins/edu_slave', readOnly: false)
+        ]){    
     //node("podman-agent") {
     
     node(label) {
