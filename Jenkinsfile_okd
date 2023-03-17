@@ -11,7 +11,8 @@ podTemplate(label: label, serviceAccount: 'jenkins-admin', namespace: 'edu30',
     ],
     volumes: [
         hostPathVolume(hostPath: '/etc/containers', mountPath: '/var/lib/containers'),
-        nfsVolume(mountPath: '/var/jenkins_home', serverAddress: '172.25.1.162', serverPath: '/share_8c0fade2_649f_4ca5_aeaa_8fd57904f8d5/jenkins/edu_slave', readOnly: false)
+        persistentVolumeClaim(mountPath: '/var/jenkins_home', claimName: 'jenkins-edu-slave-pvc',readOnly: false)
+        //nfsVolume(mountPath: '/var/jenkins_home', serverAddress: '172.25.1.162', serverPath: '/share_8c0fade2_649f_4ca5_aeaa_8fd57904f8d5/jenkins/edu_slave', readOnly: false)
         ]){    
     //node("podman-agent") {
     
