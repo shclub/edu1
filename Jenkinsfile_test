@@ -1,7 +1,7 @@
 def label = "agent-${UUID.randomUUID().toString()}"
 def gitBranch = 'master'
 def docker_registry = "https://211.252.85.148:40002"  
-def imageName = ${docker_registry} + "edu/edu1"
+def imageName = "https://211.252.85.148:40002/edu/edu1"
 
 
 //공통 환경 변수
@@ -35,10 +35,8 @@ podTemplate(label: label, serviceAccount: 'jenkins-admin', namespace: 'edu30'){
                      echo 'TAG ==========> '
                      """
 
-           }
-
-            }
-
+                  }
+              }
         }
 
     }
