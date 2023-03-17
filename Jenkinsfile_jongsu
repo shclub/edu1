@@ -6,10 +6,10 @@ def docker_registry = "https://211.252.85.148:40002"
 //공통 환경 변수
 
 def TAG = getTag(gitBranch)
-podTemplate(label: label, serviceAccount: 'jenkins-admin', namespace: 'edu30',
-    containers: [
-        containerTemplate(name: 'podman', image: 'mattermost/podman:1.8.0', ttyEnabled: true, command: 'cat', privileged: true, alwaysPullImage: true)
-    ]){
+podTemplate(label: label, serviceAccount: 'jenkins-admin', namespace: 'edu30'){
+#    containers: [
+#        containerTemplate(name: 'podman', image: 'mattermost/podman:1.8.0', ttyEnabled: true, command: 'cat', privileged: true, alwaysPullImage: true)
+#    ]){
 
     //node("podman-agent") {
     node(label) {
