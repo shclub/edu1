@@ -13,7 +13,7 @@ podTemplate(label: label, serviceAccount: 'jenkins-admin', namespace: 'edu30',
         ,containerTemplate(name: 'jnlp', image: 'jenkins/jnlp-slave:latest-jdk11', args: '${computer.jnlpmac} ${computer.name}')
     ],
     volumes: [
-        nfsVolume( mountPath: '/slave', serverAddress: '172.25.1.162', serverPath: '/share_8c0fade2_649f_4ca5_aeaa_8fd57904f8d5/jenkins/edu_slave', readOnly: false ),
+        nfsVolume( mountPath: '/', serverAddress: '172.25.1.162', serverPath: '/share_8c0fade2_649f_4ca5_aeaa_8fd57904f8d5/jenkins/edu_slave', readOnly: false ),
     ]){
     node("podman-agent") {
     //node(label) {
@@ -33,8 +33,8 @@ podTemplate(label: label, serviceAccount: 'jenkins-admin', namespace: 'edu30',
                      podman login -u ${USERNAME} -p ${PASSWORD} ${docker_registry} --tls-verify=false
                      podman build -t ${imageName} --cgroup-manager=cgroupfs --tls-verify=false .
                      podman push ${imageName} --tls-verify=false
-                     //echo 'TAG ==========> ' ${TAG}
-                     echo 'TAG ==========> '
+                     echo 'TAG ==========> ' ${imageName}
+                     //echo 'TAG ==========> '
                      """
 
                   }
