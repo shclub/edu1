@@ -12,8 +12,8 @@ podTemplate(label: label, serviceAccount: 'jenkins-admin', namespace: 'edu30',
         containerTemplate(name: 'podman', image: 'mattermost/podman:1.8.0', ttyEnabled: true, command: 'cat', privileged: true, alwaysPullImage: true)
     ]){
 
-    node("podman-agent") {
-    //node(label) {
+    //node("podman-agent") {
+    node(label) {
        stage('Clone Git Project') {
             sh "pwd"
             echo 'Clone'
