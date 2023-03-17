@@ -4,18 +4,18 @@ def docker_registry = "https://211.252.85.148:40002"
 def imageName = "211.252.85.148:40002/edu/edu1"
 
 def TAG = getTag(gitBranch)
-podTemplate(label: label, serviceAccount: 'jenkins-admin', namespace: 'edu30'){
-    //containers: [
-    //    containerTemplate(name: 'podman', image: 'mattermost/podman:1.8.0', ttyEnabled: true, command: 'cat', privileged: true, alwaysPullImage: true)
-    //    ,containerTemplate(name: 'jnlp', image: 'jenkins/jnlp-slave:latest-jdk11', args: '${computer.jnlpmac} ${computer.name}')
-    //],
-    //volumes: [
-    //    nfsVolume( mountPath: '/', serverAddress: '172.25.1.162', serverPath: '/share_8c0fade2_649f_4ca5_aeaa_8fd57904f8d5/jenkins/edu_slave', readOnly: false ),
-    //]){
+podTemplate(label: label, serviceAccount: 'jenkins-admin', namespace: 'edu30',
+    containers: [
+        containerTemplate(name: 'podman', image: 'mattermost/podman:1.8.0', ttyEnabled: true, command: 'cat', privileged: true, alwaysPullImage: true)
+        ,containerTemplate(name: 'jnlp', image: 'jenkins/jnlp-slave:latest-jdk11', args: '${computer.jnlpmac} ${computer.name}')
+    ],
+    volumes: [
+        nfsVolume( mountPath: '/var/jenkins_home', serverAddress: '172.25.1.162', serverPath: '/share_8c0fade2_649f_4ca5_aeaa_8fd57904f8d5/jenkins/edu_slave', readOnly: false ),
+    ]){
     
-    node("podman-agent") {
+    //node("podman-agent") {
     
-    //node(label) {
+    node(label) {
        stage('Clone Git Project') {
             sh "pwd"
             echo 'Clone'
