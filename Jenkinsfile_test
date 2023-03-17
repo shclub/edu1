@@ -10,8 +10,11 @@ def TAG = getTag(gitBranch)
 podTemplate(label: label, serviceAccount: 'jenkins-admin', namespace: 'edu30',
     containers: [
         containerTemplate(name: 'podman', image: 'mattermost/podman:1.8.0', ttyEnabled: true, command: 'cat', privileged: true, alwaysPullImage: true)
+        ,containerTemplate(name: 'jnlp', image: 'jenkins/jnlp-slave:latest-jdk11', args: '${computer.jnlpmac} ${computer.name}')
+    ],
+    volumes: [
+        nfsVolume( mountPath: '/root/.m2', serverAddress: '10.217.139.23', serverPath: '/AIRFLOW/jenkins-m2', readOnly: false ),
     ]){
-
     //node("podman-agent") {
     node(label) {
        stage('Clone Git Project') {
