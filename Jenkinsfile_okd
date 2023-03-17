@@ -1,34 +1,52 @@
-def UUID = UUID.randomUUID().toString()
-def label = "jenkins-agent-${UUID}"
-def DATE = new Date().format('yyyyMMddHHmmss')
-def TAG = "${DATE}"
-P_NAMESPACE = "edu30"
+def label = "agent-${UUID.randomUUID().toString()}"
+def gitBranch = 'master'
+def docker_registry = "https://211.252.85.148:40002"  
+def imageName = "211.252.85.148:40002/edu/edu1"
 
-// Harbor 사용시 : 앞에 project 이름이 붙는다. 예) edu
-dockerRepo = "edu/edu1"
-// nexus
-//dockerRepo = "edu1"
-dockerCredentials = 'harbor_ci'
-dockerImageVersioned = ""
-dockerImageLatest = ""
-docker_registry = "https://211.252.85.148:40002"    
-def imageName = "https://211.252.85.148:40002/"  + dockerRepo
-
-podTemplate(label: label, serviceAccount: jenkins-admin, namespace: P_NAMESPACE){
-    node('podman-agent') {//TEMPLATE_LABEL
-        stage('Clone Git Project') {
-            echo '==================Clone==================='
-            git branch: 'master', credentialsId: 'github_ci', url: "https://github.com/shclub/edu1.git"
+def TAG = getTag(gitBranch)
+podTemplate(label: label, serviceAccount: 'jenkins-admin', namespace: 'edu30'){
+    //containers: [
+    //    containerTemplate(name: 'podman', image: 'mattermost/podman:1.8.0', ttyEnabled: true, command: 'cat', privileged: true, alwaysPullImage: true)
+    //    ,containerTemplate(name: 'jnlp', image: 'jenkins/jnlp-slave:latest-jdk11', args: '${computer.jnlpmac} ${computer.name}')
+    //],
+    //volumes: [
+    //    nfsVolume( mountPath: '/', serverAddress: '172.25.1.162', serverPath: '/share_8c0fade2_649f_4ca5_aeaa_8fd57904f8d5/jenkins/edu_slave', readOnly: false ),
+    //]){
+    
+    node("podman-agent") {
+    
+    //node(label) {
+       stage('Clone Git Project') {
+            sh "pwd"
+            echo 'Clone'
+            git branch: 'master', credentialsId: 'github_ci', url: 'https://github.com/shclub/edu1.git'
+            sh "ls"
         }
 
-        stage('Podman Build & Image Push ') {
-            container('podman') {
-                docker.withRegistry(docker_registry, dockerCredentials) {
-                        sh "podman build -t edu1 ."
-                        sh "docker tag edu1 ${imageName}:latest"
-                        sh "docker push ${imageName}:latest"
-                    }
-            }
+         
+        stage('Build') {
+                container('podman') {
+                  withCredentials([usernamePassword(credentialsId: 'harbor_ci',usernameVariable: 'USERNAME',passwordVariable: 'PASSWORD')]) {
+                     sh  """
+                     ls -al /etc/containers
+                     podman login -u ${USERNAME} -p ${PASSWORD} ${docker_registry} --tls-verify=false
+                     podman build -t ${imageName} --cgroup-manager=cgroupfs --tls-verify=false .
+                     podman push ${imageName} --tls-verify=false
+                     echo 'TAG ==========> ' ${imageName}
+                     """
+
+                  }
+              }
         }
+
     }
+
 }
+
+def getTag(branchName){     
+    def TAG
+    def DATETIME_TAG = new Date().format('yyyyMMddHHmmss')
+    //TAG = branchName+"-${DATETIME_TAG}"
+    TAG = "${DATETIME_TAG}"
+    return TAG
+}  
