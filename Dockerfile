@@ -14,5 +14,5 @@ RUN ln -snf /usr/share/zoneinfo/Asia/Seoul /etc/localtime && echo Asia/Seoul > /
 EXPOSE 40003
 
 # execute the Flask app
-#CMD ["python", "app.py"]
-CMD [python app.py] 
+CMD ["python", "app.py"]
+#CMD [python app.py] 
