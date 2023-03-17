@@ -1,0 +1,34 @@
+def UUID = UUID.randomUUID().toString()
+def label = "jenkins-agent-${UUID}"
+def DATE = new Date().format('yyyyMMddHHmmss')
+def TAG = "${DATE}"
+P_NAMESPACE = "edu30"
+
+// Harbor 사용시 : 앞에 project 이름이 붙는다. 예) edu
+dockerRepo = "edu/edu1"
+// nexus
+//dockerRepo = "edu1"
+dockerCredentials = 'harbor_ci'
+dockerImageVersioned = ""
+dockerImageLatest = ""
+docker_registry = "https://211.252.85.148:40002"    
+def imageName = "https://211.252.85.148:40002/"  + dockerRepo
+
+podTemplate(label: label, serviceAccount: jenkins-admin, namespace: P_NAMESPACE){
+    node('podman-agent') {//TEMPLATE_LABEL
+        stage('Clone Git Project') {
+            echo '==================Clone==================='
+            git branch: 'master', credentialsId: 'github_ci', url: "https://github.com/shclub/edu1.git"
+        }
+
+        stage('Podman Build & Image Push ') {
+            container('podman') {
+                docker.withRegistry(docker_registry, dockerCredentials) {
+                        sh "podman build -t edu1 ."
+                        sh "docker tag edu1 ${imageName}:latest"
+                        sh "docker push ${imageName}:latest"
+                    }
+            }
+        }
+    }
+}
