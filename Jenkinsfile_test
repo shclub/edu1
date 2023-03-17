@@ -15,8 +15,8 @@ podTemplate(label: label, serviceAccount: 'jenkins-admin', namespace: 'edu30'){
     //volumes: [
     //    nfsVolume( mountPath: '/', serverAddress: '172.25.1.162', serverPath: '/share_8c0fade2_649f_4ca5_aeaa_8fd57904f8d5/jenkins/edu_slave', readOnly: false ),
     //]){
-    node("podman-agent") {
-    //node(label) {
+    //node("podman-agent") {
+    node(label) {
        stage('Clone Git Project') {
             sh "pwd"
             echo 'Clone'
