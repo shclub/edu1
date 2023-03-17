@@ -1,5 +1,7 @@
 def label = "agent-${UUID.randomUUID().toString()}"
 def gitBranch = 'master'
+def docker_registry = "https://211.252.85.148:40002"    
+
 
 //공통 환경 변수
 
@@ -7,11 +9,9 @@ def TAG = getTag(gitBranch)
 podTemplate(label: label, serviceAccount: 'jenkins-admin', namespace: 'edu30',
     containers: [
         containerTemplate(name: 'podman', image: 'mattermost/podman:1.8.0', ttyEnabled: true, command: 'cat', privileged: true, alwaysPullImage: true)
-    ],
-     
-    ){
+    ]){
 
-    node(label) {
+    node("podman-agent") {
        stage('Clone Git Project') {
             sh "pwd"
             echo 'Clone'
@@ -21,11 +21,10 @@ podTemplate(label: label, serviceAccount: 'jenkins-admin', namespace: 'edu30',
 
          
         stage('Build') {
-
                 container('podman') {
                 script {
 
-                    docker.withRegistry('https://nexus.dspace.kt.co.kr', 'harbor_ci') {
+                    docker.withRegistry(docker_registry, 'harbor_ci') {
                             sh  """
 
 
