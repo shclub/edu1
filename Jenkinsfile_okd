@@ -4,6 +4,7 @@ def docker_registry = "https://211.252.85.148:40002"
 def imageName = "211.252.85.148:40002/edu/edu1"
 
 def TAG = getTag(gitBranch)
+
 podTemplate(label: label, serviceAccount: 'jenkins-admin', namespace: 'edu30',
     containers: [
         containerTemplate(name: 'podman', image: 'mattermost/podman:1.8.0', ttyEnabled: true, command: 'cat', privileged: true, alwaysPullImage: true)
@@ -12,7 +13,6 @@ podTemplate(label: label, serviceAccount: 'jenkins-admin', namespace: 'edu30',
     volumes: [
         hostPathVolume(hostPath: '/etc/containers', mountPath: '/var/lib/containers'),
         persistentVolumeClaim(mountPath: '/var/jenkins_home', claimName: 'jenkins-edu-slave-pvc',readOnly: false)
-        //nfsVolume(mountPath: '/var/jenkins_home', serverAddress: '172.25.1.162', serverPath: '/share_8c0fade2_649f_4ca5_aeaa_8fd57904f8d5/jenkins/edu_slave', readOnly: false)
         ]){    
     //node("podman-agent") {
     
@@ -23,13 +23,11 @@ podTemplate(label: label, serviceAccount: 'jenkins-admin', namespace: 'edu30',
             git branch: 'master', credentialsId: 'github_ci', url: 'https://github.com/shclub/edu1.git'
             sh "ls"
         }
-
          
-        stage('Build') {
+        stage('Build with Podman') {
                 container('podman') {
                   withCredentials([usernamePassword(credentialsId: 'harbor_ci',usernameVariable: 'USERNAME',passwordVariable: 'PASSWORD')]) {
                      sh  """
-                     ls -al /etc/containers
                      podman login -u ${USERNAME} -p ${PASSWORD} ${docker_registry} --tls-verify=false
                      podman build -t ${imageName} --cgroup-manager=cgroupfs --tls-verify=false .
                      podman push ${imageName} --tls-verify=false
@@ -47,7 +45,6 @@ podTemplate(label: label, serviceAccount: 'jenkins-admin', namespace: 'edu30',
 def getTag(branchName){     
     def TAG
     def DATETIME_TAG = new Date().format('yyyyMMddHHmmss')
-    //TAG = branchName+"-${DATETIME_TAG}"
     TAG = "${DATETIME_TAG}"
     return TAG
 }  
