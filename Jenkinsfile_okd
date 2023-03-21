@@ -29,7 +29,8 @@ podTemplate(label: label, serviceAccount: 'jenkins-admin', namespace: 'edu30',
                 container('podman') {
                   withCredentials([usernamePassword(credentialsId: 'harbor_ci',usernameVariable: 'USERNAME',passwordVariable: 'PASSWORD')]) {
                      sh  """
-                     podman login -u ${USERNAME} -p New1234! --log-level=debug ${docker_registry} --tls-verify=false
+                     ls -al /etc/containers
+                     podman login -u ${USERNAME} -p ${PASSWORD} --log-level=debug ${docker_registry}  --tls-verify=false
                      podman build -t ${imageName} --cgroup-manager=cgroupfs --tls-verify=false .
                      podman push ${imageName} --tls-verify=false
                      echo 'TAG ==========> ' ${imageName}
