@@ -11,7 +11,7 @@ podTemplate(label: label, serviceAccount: 'jenkins-admin', namespace: 'edu30',
         ,containerTemplate(name: 'jnlp', image: 'jenkins/jnlp-slave:latest-jdk11', args: '${computer.jnlpmac} ${computer.name}')
     ],
     volumes: [
-        hostPathVolume(hostPath: '/etc/containers', mountPath: '/var/lib/containers'),
+        hostPathVolume(mountPath: '/etc/containers', hostPath: '/var/lib/containers'),
         persistentVolumeClaim(mountPath: '/var/jenkins_home', claimName: 'jenkins-edu-slave-pvc',readOnly: false)
         ]){    
     //node("podman-agent") {
