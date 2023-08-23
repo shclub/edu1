@@ -6,7 +6,6 @@ WORKDIR /app
 # add the current directory to the container as /app
 ADD . /app
 
-RUN apk --no-cache add curl
 RUN pip install -r requirements.txt
 
 RUN ln -snf /usr/share/zoneinfo/Asia/Seoul /etc/localtime && echo Asia/Seoul > /etc/timezone
