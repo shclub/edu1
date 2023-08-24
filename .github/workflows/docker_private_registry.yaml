@@ -47,7 +47,7 @@ jobs:
         uses: redhat-actions/push-to-registry@v2.7
         with:
           # Name of the image/manifest to push (e.g. username/imagename or imagename)
-          image: ${{ github.repository }} # optional
+          image: edu/shclub/edu1 #${{ github.repository }} # optional
           # 'The tag or tags of the image/manifest to push.
           tags:  ${{ steps.meta.outputs.tags }} # optional, default is latest
           # Hostname and optional namespace to push the image to (eg. quay.io/username or quay.io)
