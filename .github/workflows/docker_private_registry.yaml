@@ -1,0 +1,64 @@
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Publish Docker Private registry image
+
+on:      
+  workflow_dispatch:
+    inputs:
+      name:
+        description: "Docker TAG"
+        required: true
+        default: "master"
+    
+jobs:
+  push_to_registry:
+    name: Push Docker image to Docker Hub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+      
+      - name: Log in to Docker Hub
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ github.repository }}
+          tags: ${{ github.event.inputs.name }}
+      
+      - name: Build and push Docker image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          push: false #true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+      
+      - name: Push To private Registry
+        # You may pin to the exact commit or the version.
+        # uses: redhat-actions/push-to-registry@9986a6552bc4571882a4a67e016b17361412b4df
+        uses: redhat-actions/push-to-registry@v2.7
+        with:
+          # Name of the image/manifest to push (e.g. username/imagename or imagename)
+          image: ${{ github.repository }} # optional
+          # 'The tag or tags of the image/manifest to push.
+          tags:  ${{ steps.meta.outputs.tags }} # optional, default is latest
+          # Hostname and optional namespace to push the image to (eg. quay.io/username or quay.io)
+          registry: ${{ secrets.HARBOR_REPOSITORY }}  # optional
+          # Username to use as credential to authenticate to the registry
+          username:  ${{ secrets.HARBOR_USERNAME }} # optional
+          # Password to use as credential to authenticate to the registry
+          password:  ${{ secrets.HARBOR_PASSWORD }} # optional
+          # Verify TLS certificates when contacting the registry
+          tls-verify: false # optional, default is true
+          # After copying the image, write the digest of the resulting image to the file.
+          digestfile: "" # optional
+          # Extra args to be passed to podman push.
+          extra-args: "" # optional  
