@@ -2,8 +2,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Publish Docker Hub image
-
+name: trivy test
 on:      
   workflow_dispatch:
     inputs:
