@@ -5,7 +5,7 @@ def imageName = "shclub/edu1"
 
 def TAG = getTag(gitBranch)
 
-podTemplate(label: label, serviceAccount: 'jenkins-admin', namespace: 'default',
+podTemplate(label: label, serviceAccount: 'jenkins-admin', namespace: 'devops',
     containers: [
         containerTemplate(name: 'podman', image: 'mattermost/podman:1.8.0', ttyEnabled: true, command: 'cat', privileged: true, alwaysPullImage: true)
         ,containerTemplate(name: 'jnlp', image: 'jenkins/jnlp-slave:latest-jdk11', args: '${computer.jnlpmac} ${computer.name}')
