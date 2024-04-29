@@ -5,10 +5,9 @@ phases:
     commands:
       - echo Logging in to Amazon ECR...
       - aws --version
-#      - echo $AWS_DEFAULT_REGION
-#      - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
-      - $(aws ecr get-login --no-include-email --region ap-northeast-2) 
-      - REPOSITORY_URI=425920741281.dkr.ecr.ap-northeast-2.amazonaws.com/edu
+      - echo $AWS_DEFAULT_REGION
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin 381491860602.dkr.ecr.ap-northeast-2.amazonaws.com
+      - REPOSITORY_URI=381491860602.dkr.ecr.ap-northeast-2.amazonaws.com/mvp
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
   build:
@@ -20,5 +19,5 @@ phases:
   post_build:
     commands:
       - echo Build completed on `date`
-      - docker push $REPOSITORY_URI:latest
+#      - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
